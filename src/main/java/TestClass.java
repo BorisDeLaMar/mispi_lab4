@@ -12,7 +12,7 @@ public class TestClass {
 
     public static void main(String[] args) throws SQLException, MalformedObjectNameException, NotCompliantMBeanException, InstanceAlreadyExistsException, MBeanRegistrationException {
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-        ObjectName points_mbs = new ObjectName("mbeans:type=Points");
+        ObjectName points_mbs = new ObjectName("jmx:type=Points,name=PointsMBean");
         Points points = new Points();
         mbs.registerMBean(points, points_mbs);
         Processor  processor = new Processor();
