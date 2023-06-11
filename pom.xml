@@ -65,6 +65,14 @@
       <version>2.2.3</version>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/javax.management/jmxremote -->
+    <dependency>
+      <groupId>javax.management</groupId>
+      <artifactId>jmxremote</artifactId>
+      <version>1.0.1_04</version>
+    </dependency>
+
+
     <!-- Driver for Postgres Database -->
     <dependency>
       <groupId>org.postgresql</groupId>

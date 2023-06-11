@@ -7,6 +7,8 @@ import jmx.Points;
 
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
+import javax.management.*;
+import java.lang.management.ManagementFactory;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,6 +21,31 @@ public class Processor {
     private DatabaseManager databaseManager = new DatabaseManager(databaseConnector.getConnection());
 
     private long startTime;
+
+    private long hit_flag;
+
+    public long getHit_flag() {
+        return hit_flag;
+    }
+    public void setHit_flag(long flag){
+        hit_flag = flag;
+    }
+
+    static{
+        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        ObjectName points_mbs = null;
+        try {
+            points_mbs = new ObjectName("jmx:type=Points");
+        } catch (MalformedObjectNameException e) {
+            throw new RuntimeException(e);
+        }
+        Points points = new Points();
+        try {
+            mbs.registerMBean(points, points_mbs);
+        } catch (InstanceAlreadyExistsException | MBeanRegistrationException | NotCompliantMBeanException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
     public Hit hit = new Hit();
@@ -48,6 +75,11 @@ public class Processor {
 
     public void addHit() throws SQLException {
         startTime = System.currentTimeMillis();
+
+        if(hit_flag == 0){
+            Points.warning();
+        }
+
         hit.setHit(checkHit());
         hit.setCurrentTime(LocalDateTime.now().toString());
         hit.setExecutionTime((System.currentTimeMillis() - startTime));
@@ -60,12 +92,16 @@ public class Processor {
         double x = hit.getX();
         double y = hit.getY();
         double R = hit.getR();
+
         Points.incrementPoints_cnt();
+
         System.out.println("Входящие координаты: " + hit.getX() + ", " + hit.getY() + ", " + hit.getR());
         if (checkCircle(x, y, R) || checkRectangle(x, y, R) || checkTriangle(x, y, R)) {
             return "Hit";
         } else {
+
             Points.incrementOddPoints_cnt();
+
             return "Miss";
         }
     }

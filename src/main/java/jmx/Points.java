@@ -1,9 +1,14 @@
 package jmx;
 
+import javax.faces.bean.ManagedBean;
+import java.sql.SQLOutput;
+
+@ManagedBean
 public class Points implements PointsMBean{
 
     private static long points_cnt = 0;
     private static long number_of_odds = 0;
+
 
     @Override
     public long num_of_points() {
@@ -15,9 +20,15 @@ public class Points implements PointsMBean{
         return number_of_odds;
     }
 
+    public static void warning() {
+        System.out.println("Не попал!");
+    }
     @Override
-    public void warning() {
-
+    public double inversed_accuracy(){
+        if(points_cnt == 0){
+            return 0;
+        }
+        return (double)number_of_odds/points_cnt;
     }
 
     public static void incrementPoints_cnt() {

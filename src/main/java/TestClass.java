@@ -4,17 +4,14 @@ import utils.DatabaseConnector;
 import utils.DatabaseManager;
 import utils.Hit;
 
+import javax.faces.bean.ApplicationScoped;
 import javax.management.*;
 import java.lang.management.ManagementFactory;
 import java.sql.SQLException;
 
 public class TestClass {
 
-    public static void main(String[] args) throws SQLException, MalformedObjectNameException, NotCompliantMBeanException, InstanceAlreadyExistsException, MBeanRegistrationException {
-        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-        ObjectName points_mbs = new ObjectName("jmx:type=Points,name=PointsMBean");
-        Points points = new Points();
-        mbs.registerMBean(points, points_mbs);
+    public static void main(String[] args) throws SQLException {
         Processor  processor = new Processor();
         processor.hit.setX(2);
         processor.hit.setY(1);

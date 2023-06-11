@@ -31,6 +31,7 @@ function validateX() {
         || (parseFloat(point.x) <= -5)
         || (parseFloat(point.x) >= 5)
         || (!Number.isFinite(parseFloat(point.x)))   ) {
+
         sendMessage("X некорректен");
         return false;
     } else {
