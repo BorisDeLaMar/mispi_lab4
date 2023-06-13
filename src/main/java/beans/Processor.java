@@ -1,5 +1,6 @@
 package beans;
 
+import jmx.Accuracy;
 import utils.DatabaseConnector;
 import utils.DatabaseManager;
 import utils.Hit;
@@ -14,6 +15,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static java.lang.Math.abs;
 
 public class Processor {
     private DatabaseConnector databaseConnector = new DatabaseConnector("localhost",
@@ -34,14 +37,18 @@ public class Processor {
     static{
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         ObjectName points_mbs = null;
+        ObjectName accuracy = null;
         try {
             points_mbs = new ObjectName("jmx:type=Points");
+            accuracy = new ObjectName("jmx:type=Accuracy");
         } catch (MalformedObjectNameException e) {
             throw new RuntimeException(e);
         }
         Points points = new Points();
+        Accuracy accur = new Accuracy();
         try {
             mbs.registerMBean(points, points_mbs);
+            mbs.registerMBean(accur, accuracy);
         } catch (InstanceAlreadyExistsException | MBeanRegistrationException | NotCompliantMBeanException e) {
             throw new RuntimeException(e);
         }
@@ -76,10 +83,6 @@ public class Processor {
     public void addHit() throws SQLException {
         startTime = System.currentTimeMillis();
 
-        if(hit_flag == 0){
-            Points.warning();
-        }
-
         hit.setHit(checkHit());
         hit.setCurrentTime(LocalDateTime.now().toString());
         hit.setExecutionTime((System.currentTimeMillis() - startTime));
@@ -93,17 +96,23 @@ public class Processor {
         double y = hit.getY();
         double R = hit.getR();
 
-        Points.incrementPoints_cnt();
-
-        System.out.println("Входящие координаты: " + hit.getX() + ", " + hit.getY() + ", " + hit.getR());
-        if (checkCircle(x, y, R) || checkRectangle(x, y, R) || checkTriangle(x, y, R)) {
-            return "Hit";
-        } else {
-
-            Points.incrementOddPoints_cnt();
-
-            return "Miss";
+        if(abs(x) > 5 || abs(y) > 3){
+            Points.warning();
         }
+        else{
+            Points.incrementPoints_cnt();
+
+            System.out.println("Входящие координаты: " + hit.getX() + ", " + hit.getY() + ", " + hit.getR());
+            if (checkCircle(x, y, R) || checkRectangle(x, y, R) || checkTriangle(x, y, R)) {
+                return "Hit";
+            } else {
+
+                Points.incrementOddPoints_cnt();
+
+                return "Miss";
+            }
+        }
+        return "";
     }
 
     private boolean checkCircle(double x, double y, double R) {

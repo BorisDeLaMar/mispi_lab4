@@ -1,8 +1,9 @@
 package jmx;
-import javax.management.ManagedAttribute;
+
 public interface PointsMBean {
-    @ManagedAttribute(description="gfdg")
     long num_of_points();
     long num_of_odd_points();
-    double inversed_accuracy();
+    long getPoints_cnt_bean();
+    long getNumber_of_odds_bean();
+    public void checkCoordinates(int x, int y);
 }
