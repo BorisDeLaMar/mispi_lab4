@@ -23,6 +23,8 @@ public class Processor {
             "postgres",  "6291604", "postgres", 5432); //oops :)
     private DatabaseManager databaseManager = new DatabaseManager(databaseConnector.getConnection());
 
+    private static Points points = new Points();
+
     private long startTime;
 
     private long hit_flag;
@@ -44,7 +46,6 @@ public class Processor {
         } catch (MalformedObjectNameException e) {
             throw new RuntimeException(e);
         }
-        Points points = new Points();
         Accuracy accur = new Accuracy();
         try {
             mbs.registerMBean(points, points_mbs);
@@ -84,11 +85,13 @@ public class Processor {
         startTime = System.currentTimeMillis();
 
         hit.setHit(checkHit());
-        hit.setCurrentTime(LocalDateTime.now().toString());
-        hit.setExecutionTime((System.currentTimeMillis() - startTime));
-        hits.add(hit);
-        databaseManager.addNewResult(hit);
-        hit = new Hit(hit.getX(), hit.getY(), hit.getR());
+        //if(hit.getHit() != "OutOfBounds"){
+            hit.setCurrentTime(LocalDateTime.now().toString());
+            hit.setExecutionTime((System.currentTimeMillis() - startTime));
+            hits.add(hit);
+            databaseManager.addNewResult(hit);
+            hit = new Hit(hit.getX(), hit.getY(), hit.getR());
+        //}
     }
 
     public String checkHit() {
@@ -96,23 +99,24 @@ public class Processor {
         double y = hit.getY();
         double R = hit.getR();
 
-        if(abs(x) > 5 || abs(y) > 3){
-            Points.warning();
+        boolean flag = points.checkCoordinates(x, y);
+
+        Points.incrementPoints_cnt();
+
+        System.out.println("Входящие координаты: " + hit.getX() + ", " + hit.getY() + ", " + hit.getR());
+
+        /*if(!flag){
+            return "OutOfBounds";
+        }*/
+
+        if (checkCircle(x, y, R) || checkRectangle(x, y, R) || checkTriangle(x, y, R)) {
+            return "Hit";
+        } else {
+
+            Points.incrementOddPoints_cnt();
+
+            return "Miss";
         }
-        else{
-            Points.incrementPoints_cnt();
-
-            System.out.println("Входящие координаты: " + hit.getX() + ", " + hit.getY() + ", " + hit.getR());
-            if (checkCircle(x, y, R) || checkRectangle(x, y, R) || checkTriangle(x, y, R)) {
-                return "Hit";
-            } else {
-
-                Points.incrementOddPoints_cnt();
-
-                return "Miss";
-            }
-        }
-        return "";
     }
 
     private boolean checkCircle(double x, double y, double R) {

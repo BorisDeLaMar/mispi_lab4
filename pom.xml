@@ -38,6 +38,19 @@
       <scope>compile</scope>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/javax.management/jmxremote -->
+    <dependency>
+      <groupId>javax.management</groupId>
+      <artifactId>jmxremote</artifactId>
+      <version>1.0.1_04</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sun.jmx</groupId>
+      <artifactId>jmxri</artifactId>
+      <version>1.2</version>
+    </dependency>
+
     <dependency>
       <groupId>com.sun.faces</groupId>
       <artifactId>jsf-impl</artifactId>

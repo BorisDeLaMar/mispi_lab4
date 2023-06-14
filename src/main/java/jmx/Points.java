@@ -4,41 +4,32 @@ import javax.faces.bean.ManagedBean;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
-import javax.management.AttributeChangeNotification;
-import javax.management.MBeanNotificationInfo;
-import javax.management.Notification;
-import javax.management.NotificationBroadcasterSupport;
+import javax.management.*;
 
 
 @ManagedBean
 public class Points extends NotificationBroadcasterSupport implements PointsMBean{
 
-    /*private MBeanServer mbs = null;
+    private long seqNum = 0;
 
-    public Points() {
-        mbs = ManagementFactory.getPlatformMBeanServer();
-        try {
-            ObjectName name = new ObjectName("jmx:type=Points");
-            mbs.registerMBean(this, name);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
 
-    @Override
-    public void checkCoordinates(int x, int y) {
+    //@Override
+    public boolean checkCoordinates(double x, double y) {
         // Check if x and y coordinates are within the bounds of the coordinate plane
         if (x < -5 || x > 5 || y < -3 || y > 3) {
             // If the coordinates are out of bounds, send a notification
             Notification notification = new Notification(
-                    "coordinatesOutOfBounds",
+                    "Error",
                     this,
-                    0,
+                    seqNum,
                     System.currentTimeMillis(),
                     "The coordinates are out of bounds."
             );
             sendNotification(notification);
+            seqNum += 1;
+            return false;
         }
+        return true;
     }
 
     @Override

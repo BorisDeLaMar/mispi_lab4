@@ -1,4 +1,3 @@
-//import { Points } from "src/main/java/jmx/Points.java";
 let point = {
     x: undefined,
     y: undefined,
@@ -11,23 +10,11 @@ $(document).ready(function () {
     drawChart()
     $('.submit').on('click', function(e) {
         e.preventDefault();
-        //var mbean = Points();
 
         point.x = $('.x-value').val().replace(",", ".").trim();
         point.y = $('#coordinates-form\\:y-value').val().replace(",", ".").trim();
-        /*point.x.addEventListener("input", function() {
-            var x = parseInt(point.x.value);
-            var y = parseInt(point.y.value);
-            // Call the checkCoordinates method of the MBean
-            mbean.checkCoordinates(x, y)});
-        point.y.addEventListener("input", function() {
-            var x = parseInt(point.x.value);
-            var y = parseInt(point.y.value);
-            // Call the checkCoordinates method of the MBean
-            mbean.checkCoordinates(x, y)});*/
 
         $("#message").text("");
-
 
         if (validateX() && validateY() && validateR()) {
             document.getElementById('form_hidden:x_hidden').value = point.x;
@@ -44,7 +31,6 @@ function validateX() {
         || (parseFloat(point.x) <= -5)
         || (parseFloat(point.x) >= 5)
         || (!Number.isFinite(parseFloat(point.x)))   ) {
-
         sendMessage("X некорректен");
         return false;
     } else {
@@ -93,7 +79,7 @@ function validateR() {
             return true;
         }
     }
- }
+}
 
 function confirmRadius(r) {
     point.r = r;
