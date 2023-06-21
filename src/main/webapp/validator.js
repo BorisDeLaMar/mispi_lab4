@@ -16,7 +16,7 @@ $(document).ready(function () {
 
         $("#message").text("");
 
-        if (validateX() && validateY() && validateR()) {
+        if (validateR()) {
             document.getElementById('form_hidden:x_hidden').value = point.x;
             document.getElementById('form_hidden:y_hidden').value = point.y;
             document.getElementById('form_hidden:r_hidden').value = point.r;

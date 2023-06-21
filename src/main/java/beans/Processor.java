@@ -85,13 +85,13 @@ public class Processor {
         startTime = System.currentTimeMillis();
 
         hit.setHit(checkHit());
-        //if(hit.getHit() != "OutOfBounds"){
+        if(hit.getHit() != "OutOfBounds"){
             hit.setCurrentTime(LocalDateTime.now().toString());
             hit.setExecutionTime((System.currentTimeMillis() - startTime));
             hits.add(hit);
             databaseManager.addNewResult(hit);
             hit = new Hit(hit.getX(), hit.getY(), hit.getR());
-        //}
+        }
     }
 
     public String checkHit() {
@@ -105,9 +105,9 @@ public class Processor {
 
         System.out.println("Входящие координаты: " + hit.getX() + ", " + hit.getY() + ", " + hit.getR());
 
-        /*if(!flag){
+        if(!flag){
             return "OutOfBounds";
-        }*/
+        }
 
         if (checkCircle(x, y, R) || checkRectangle(x, y, R) || checkTriangle(x, y, R)) {
             return "Hit";
