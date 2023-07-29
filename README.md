@@ -1,4 +1,4 @@
-# web-lab-3
+# web-lab-3_by_cleanyco
 
 Создание таблички в PostgreSQL:
 
